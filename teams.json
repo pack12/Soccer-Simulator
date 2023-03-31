@@ -1,0 +1,106 @@
+{"teams": {
+  "Arsenal": {
+    "teamid": 1,
+    "facilities": 4,
+    "scouting": 18
+
+
+  },
+  "Aston Villa": {
+    "teamid": 2,
+    "facilities": 3,
+    "scouting": 11
+  },
+  "Bournemouth": {
+    "teamid": 3,
+    "facilities": 5,
+    "scouting": 11
+  },
+  "Brentford": {
+    "teamid": 4,
+    "facilities": 4,
+    "scouting": 15
+  },
+  "Brighton & Hove Albion": {
+    "teamid": 5,
+    "facilities": 4,
+    "scouting": 14
+  },
+  "Chelsea": {
+    "teamid": 6,
+    "facilities": 5,
+    "scouting": 19
+  },
+  "Crystal Palace": {
+    "teamid": 7,
+    "facilities": 4,
+    "scouting": 10
+  },
+  "Everton": {
+    "teamid": 8,
+    "facilities": 3,
+    "scouting": 14
+  },
+  "Fulham": {
+    "teamid": 9,
+    "facilities": 4,
+    "scouting": 9
+  },
+  "Leeds United": {
+    "teamid": 10,
+    "facilities": 4,
+    "scouting": 15
+  },
+  "Leicester City": {
+    "teamid": 11,
+    "facilities": 5,
+    "scouting": 16
+  },
+  "Liverpool": {
+    "teamid": 12,
+    "facilities": 5,
+    "scouting": 19
+  },
+  "Manchester City": {
+    "teamid": 13,
+    "facilities": 5,
+    "scouting": 20
+  },
+  "Manchester United": {
+    "teamid": 14,
+    "facilities": 5,
+    "scouting": 19
+  },
+  "Newcastle United": {
+    "teamid": 15,
+    "facilities": 4,
+    "scouting": 15
+  },
+  "Nottingham Forest": {
+    "teamid": 16,
+    "facilities": 4,
+    "scouting": 8
+  },
+  "Southampton": {
+    "teamid": 17,
+    "facilities": 5,
+    "scouting": 19
+  },
+  "Tottenham Hotspur": {
+    "teamid": 18,
+    "facilities": 5,
+    "scouting": 15
+  },
+  "West Ham United": {
+    "teamid": 19,
+    "facilities": 5,
+    "scouting": 16
+  },
+  "Wolverhampton Wanderers": {
+    "teamid": 20,
+    "facilities": 4,
+    "scouting": 10
+  }
+}
+
+}
