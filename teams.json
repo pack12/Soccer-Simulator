@@ -2,104 +2,124 @@
   "Arsenal": {
     "teamid": 1,
     "facilities": 4,
-    "scouting": 18
+    "scouting": 18,
+    "finances": 85
 
 
   },
   "Aston Villa": {
     "teamid": 2,
     "facilities": 3,
-    "scouting": 11
+    "scouting": 11,
+    "finances": 65
   },
   "Bournemouth": {
     "teamid": 3,
     "facilities": 5,
-    "scouting": 11
+    "scouting": 14,
+    "finances": 60
   },
   "Brentford": {
     "teamid": 4,
     "facilities": 4,
-    "scouting": 15
+    "scouting": 15,
+    "finances": 70
   },
   "Brighton & Hove Albion": {
     "teamid": 5,
     "facilities": 4,
-    "scouting": 14
+    "scouting": 14,
+    "finances": 70
   },
   "Chelsea": {
     "teamid": 6,
     "facilities": 5,
-    "scouting": 19
+    "scouting": 19,
+    "finances": 90
   },
   "Crystal Palace": {
     "teamid": 7,
     "facilities": 4,
-    "scouting": 10
+    "scouting": 10,
+    "finances": 65
   },
   "Everton": {
     "teamid": 8,
     "facilities": 3,
-    "scouting": 14
+    "scouting": 14,
+    "finances": 75
   },
   "Fulham": {
     "teamid": 9,
     "facilities": 4,
-    "scouting": 9
+    "scouting": 9,
+    "finances": 60
   },
   "Leeds United": {
     "teamid": 10,
     "facilities": 4,
-    "scouting": 15
+    "scouting": 15,
+    "finances": 80
   },
   "Leicester City": {
     "teamid": 11,
     "facilities": 5,
-    "scouting": 16
+    "scouting": 16,
+    "finances": 75
   },
   "Liverpool": {
     "teamid": 12,
     "facilities": 5,
-    "scouting": 19
+    "scouting": 19,
+    "finances": 85
   },
   "Manchester City": {
     "teamid": 13,
     "facilities": 5,
-    "scouting": 20
+    "scouting": 20,
+    "finances": 100
   },
   "Manchester United": {
     "teamid": 14,
     "facilities": 5,
-    "scouting": 19
+    "scouting": 19,
+    "finances": 95
   },
   "Newcastle United": {
     "teamid": 15,
     "facilities": 4,
-    "scouting": 15
+    "scouting": 15,
+    "finances": 90
   },
   "Nottingham Forest": {
     "teamid": 16,
     "facilities": 4,
-    "scouting": 8
+    "scouting": 8,
+    "finances": 50
   },
   "Southampton": {
     "teamid": 17,
     "facilities": 5,
-    "scouting": 19
+    "scouting": 19,
+    "finances": 65
   },
   "Tottenham Hotspur": {
     "teamid": 18,
     "facilities": 5,
-    "scouting": 15
+    "scouting": 15,
+    "finances": 75
   },
   "West Ham United": {
     "teamid": 19,
     "facilities": 5,
-    "scouting": 16
+    "scouting": 16,
+    "finances": 70
   },
   "Wolverhampton Wanderers": {
     "teamid": 20,
     "facilities": 4,
-    "scouting": 10
+    "scouting": 10,
+    "finances": 79
   }
 }
 
