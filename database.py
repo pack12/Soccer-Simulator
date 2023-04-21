@@ -1,6 +1,10 @@
 import sqlite3
 import json
 import random
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from matplotlib import ticker
+import numpy as np
 
 def connect():
 
@@ -23,7 +27,7 @@ def populate_teams(con):
 
         for i in teams_j:
             for j in teams_j[i]:
-                print(f'{j}: {teams_j[i][j]}')
+                #print(f'{j}: {teams_j[i][j]}')
                 team_id = teams_j[i][j]['teamid']
                 name = j
                 facilities = teams_j[i][j]['facilities']
@@ -39,7 +43,7 @@ def populate_teams(con):
                                          "WHERE teams.name = ? and managers.team = ?", (name, name))
 
                 manager_id, team_id = manager_id.fetchone()
-                print(f'ManagerID : {manager_id} TeamID: {team_id}')
+                #print(f'ManagerID : {manager_id} TeamID: {team_id}')
 
                 sql_update_query = """UPDATE teams SET managerid = ? where teams.name = ? AND teams.teamid = ?"""
                 data = (manager_id, name, team_id)
@@ -70,8 +74,7 @@ def populate_players(con):
             finances = finances.fetchone()[0]
             facilities = cur.execute("SELECT teams.facilities FROM teams WHERE teams.teamid = ?", (i,))
             facilities = facilities.fetchone()[0]
-            print(
-                f'TEAM : {team} Manager RATING: {manager_rating} Scouting : {scouting} FINANCES: {finances} FACILITIES: {facilities}')
+            #print(f'TEAM : {team} Manager RATING: {manager_rating} Scouting : {scouting} FINANCES: {finances} FACILITIES: {facilities}')
 
             for j in range(30):
 
@@ -137,3 +140,25 @@ def populate_managers(con):
                 data = [(i, fname, lname, rating, team)]
                 cur.executemany("INSERT INTO managers VALUES(?,?,?,?,?)", data)
                 i += 1
+
+def drop_tables(con):
+    cur = con.cursor()
+
+    #For testing purposes
+    cur.execute("DROP TABLE player")
+    cur.execute("DROP TABLE teams")
+    cur.execute("DROP TABLE managers")
+
+def execute_user_command(con, usr_input):
+    cur = con.cursor()
+    try:
+
+
+        res = cur.execute(usr_input)
+
+    except:
+        print("Invalid SQL Command! Try again")
+    else:
+        for i in res.fetchall():
+
+            print(i)
