@@ -1,4 +1,3 @@
-import itertools
 import sqlite3
 import json
 import random
@@ -256,25 +255,18 @@ def generate_schedule(con):
         """This is where I'm going to edit the dictionary to act like the sql stuff"""
         iterations = 0
         for k in range(len(pick_teams)):
-            # print(f'What is this {home_team}? {total_schedule[home_team][k]}')
+
             iterations+=1
-            # print(f'Iteration: {iterations}')
+
 
             """If both teams have an empty slot"""
             if total_schedule[home_team][k] == None and total_schedule[pick_teams[k]][k] == None:
-                # print("Is this being executed?")
-                # print(total_schedule)
-                # total_schedule[home_team].append(pick_teams[k])
-                # total_schedule[pick_teams[k]].append(home_team)
                 total_schedule[home_team][k] = pick_teams[k]
                 total_schedule[pick_teams[k]][k] = home_team
-            # else:
-            #     while total_schedule[home_team][k] is None and total_schedule[pick_teams[k]][k] is None:
 
 
-        # print(total_schedule)
+
         for team in total_schedule:
-            # print(f'{team} : {total_schedule[team]}')
             team_query = get_team_info(con, team)
             team_id = team_query.fetchone()[0]
             team_query = get_team_info(con, team)
@@ -285,14 +277,12 @@ def generate_schedule(con):
                 week+=1
     week = 1
     for i in range(1,39):
-        print(f'WEEK {week} NOOPS---------')
+
         week_str = "week_" + str(week)
         command_line = f'select teamid, {week_str} from schedule where {week_str} is Null'
         schedule_query = cur_read.execute(command_line)
         noop_list = schedule_query.fetchall()
-        print(noop_list)
-        # print(len(noop_list))
-        # print(noop_list[0][0])
+
         for j in range(0,len(noop_list),2):
             #Go through teamid order, and team below teamid plays above, final teamid in list plays above
 
@@ -300,7 +290,7 @@ def generate_schedule(con):
             team_info = team_query.fetchone()
             team_name = team_info[1]
             team_id = team_info[0]
-            # print(f'Home: {team_name} ID: {team_id}')
+
             """Executing a sql query and storing it in away_team_query"""
             away_team_query = get_team_info_from_id(con,noop_list[j+1][0])
 
@@ -312,12 +302,12 @@ def generate_schedule(con):
             away_team_id = away_team_info[0]
 
 
-            # print(f'Away: {away_team_name} ID: {away_team_id}')
+
             """Update the spot for home team"""
             insert_into_schedule(con,team_id,week,away_team_name,cur_write)
             """Update the spot for away team"""
             insert_into_schedule(con, away_team_id,week,team_name,cur_write)
-            # print(team_name)
+
         week+=1
 
 
@@ -328,7 +318,7 @@ def generate_initial_schedule_value(cursor):
     cur = cursor
     #Generate all of the team_ids
     for i in range(1,21):
-        # print(i)
+
         cur.execute("insert into schedule (teamid) values(?)",(i,))
 
 def insert_into_schedule(con, home_id, week_num, other_team,cursor_write):
