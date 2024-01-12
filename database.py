@@ -1,3 +1,4 @@
+import itertools
 import sqlite3
 import json
 import random
@@ -183,83 +184,141 @@ def get_team_info(con,team):
     return team_info
     # for i in team_info.fetchall():
     #     print(i[0])
-
+def get_team_info_from_id(con, id):
+    cur = con.cursor()
+    team_info = cur.execute("select * from teams where teams.teamid = ?",(id,))
+    return team_info
 
 def generate_schedule(con):
 
-    cur = con.cursor()
-    teams = cur.execute("select teams.name from teams")
-    # teams = teams.fetchall()
-    rnd = random.randint(0, 19)
-
-    #Prints Teams: <sqlite3.Cursor object
-    print(f'Teams: {teams}')
-
-
-    lst_team = []
-    for i in teams.fetchall():
-        # print(i[0])
-        """Add names of team to lst_team"""
-        lst_team.append(i[0])
-
-    original_teams = lst_team
-    print(f'Original 1: {original_teams}')
+    cur_read = con.cursor()
+    cur_write = con.cursor()
+    teams = cur_read.execute("select teams.name from teams")
+    # schedule = cur_read.execute("select * from schedule")
+    number = 1
+    teams_j = open("teams.json")
+    teams_j = json.load(teams_j)
 
 
+    print(teams_j)
+    lst_teams = []
+    for i in teams_j['teams']:
+        lst_teams.append(i)
+    # print(lst_teams)
 
 
-    """My assumption is that this part of the code is used to use original list and create a schedule"""
-    for i in range(len(original_teams)):
-        home_team = original_teams[i]
-        low = 0
-        week = 1
-        team_id = get_team_info(con, home_team)
-        team_id = team_id.fetchone()[0]
-        # print(f'Teaminfo: {team_id}')
+    #Creating the dict for total schedule
+    total_schedule = {}
+    for i in lst_teams:
+        total_schedule[i] = []
+        for j in range(38):
+            total_schedule[i].append(None)
+        # print(total_schedule)
 
-        """Double the list, so it goes Arsenal...Wolves, Arsenal ... Wolves"""
-        lst_team = original_teams * 2
 
-        for j in range(len(lst_team)):
 
-            rnd = random.randint(low,len(lst_team)-1)
+    for i in range(len(lst_teams)):
+
+        """Create a list without the team we are picking for
+        For example, Arsenal wouldn't play Arsenal etc..."""
+        pick_teams = lst_teams[:i] + lst_teams[i + 1:]
+
+        """Double the list"""
+        pick_teams *=2
+
+        # print(pick_teams)
+        home_team = lst_teams[i]
+        # print(f'Home Team: {home_team}')
+        team_query = get_team_info(con, home_team)
+        # print(team_query.fetchall())
+        # team_query = (team_id, team_name, other_info...)
+        # Example: (14, Manchester United, 5, 14, 19, 95)
+        team_id = team_query.fetchone()[0]
+        team_query = get_team_info(con,home_team)
+        team_name = team_query.fetchone()[1]
+        # print(f'Team ID: {team_id}')
+        # print(f'Team Name: {team_name}')
+        # team_query = get_team_info(con, home_team) # This will be for the away team potentially
+
+
+
+        """Swapping the teams in the pick list"""
+        for j in range(len(pick_teams)):
+            rnd = random.randint(0, len(pick_teams)-1)
             # print(f'Rand: {rnd}')
-            temp = lst_team[rnd]
+            temp = pick_teams[rnd]
 
-            #Swap teams with random index
-            lst_team[rnd] = lst_team[j]
-            lst_team[j] = temp
-
-
-            """My assumption is that this part is to prevent teams playing back-to-back
-            so Arsenal can't play Crystal Palace Week 18, and then play Crystal Palace Week 19"""
-            if j+1 < 39 and lst_team[j] == lst_team[j+1]:
-                # print("When does this execute?")
+            # Swap teams with random index
+            pick_teams[rnd] = pick_teams[j]
+            pick_teams[j] = temp
 
 
-                # Do another swap
-                rnd = random.randint(low, 39)
+        """This is where I'm going to edit the dictionary to act like the sql stuff"""
+        iterations = 0
+        for k in range(len(pick_teams)):
+            # print(f'What is this {home_team}? {total_schedule[home_team][k]}')
+            iterations+=1
+            # print(f'Iteration: {iterations}')
 
-                # swap teams with random index
-                temp = lst_team[rnd]
-                lst_team[rnd] = lst_team[i]
-                lst_team[i] = temp
+            """If both teams have an empty slot"""
+            if total_schedule[home_team][k] == None and total_schedule[pick_teams[k]][k] == None:
+                # print("Is this being executed?")
+                # print(total_schedule)
+                # total_schedule[home_team].append(pick_teams[k])
+                # total_schedule[pick_teams[k]].append(home_team)
+                total_schedule[home_team][k] = pick_teams[k]
+                total_schedule[pick_teams[k]][k] = home_team
+            # else:
+            #     while total_schedule[home_team][k] is None and total_schedule[pick_teams[k]][k] is None:
 
-            if week == 39:
-                week -= 1
-            insert_into_schedule(con,team_id,week,lst_team[j])
-            scheddd = cur.execute("select * from schedule")
-            for row in scheddd.fetchall():
-                print(f'ROW: {row}')
-            week+=1
 
-            low+=1
+        # print(total_schedule)
+        for team in total_schedule:
+            # print(f'{team} : {total_schedule[team]}')
+            team_query = get_team_info(con, team)
+            team_id = team_query.fetchone()[0]
+            team_query = get_team_info(con, team)
+            team_name = team_query.fetchone()[1]
+            week = 1
+            for opponent in total_schedule[team]:
+                insert_into_schedule(con,team_id,week,opponent,cur_write)
+                week+=1
+    week = 1
+    for i in range(1,39):
+        print(f'WEEK {week} NOOPS---------')
+        week_str = "week_" + str(week)
+        command_line = f'select teamid, {week_str} from schedule where {week_str} is Null'
+        schedule_query = cur_read.execute(command_line)
+        noop_list = schedule_query.fetchall()
+        print(noop_list)
+        # print(len(noop_list))
+        # print(noop_list[0][0])
+        for j in range(0,len(noop_list),2):
+            #Go through teamid order, and team below teamid plays above, final teamid in list plays above
 
-        for k in range(2):
-            if home_team in lst_team:
-                lst_team.remove(home_team)
-        print(f'{home_team} -Iteration {i} {lst_team}')
+            team_query = get_team_info_from_id(con,noop_list[j][0])
+            team_info = team_query.fetchone()
+            team_name = team_info[1]
+            team_id = team_info[0]
+            # print(f'Home: {team_name} ID: {team_id}')
+            """Executing a sql query and storing it in away_team_query"""
+            away_team_query = get_team_info_from_id(con,noop_list[j+1][0])
 
+            """Store the tuple inside away_team_info(by only fetching one)"""
+            away_team_info = away_team_query.fetchone()
+
+            """Take tuple and disperse the data appropriately"""
+            away_team_name = away_team_info[1]
+            away_team_id = away_team_info[0]
+
+
+            # print(f'Away: {away_team_name} ID: {away_team_id}')
+            """Update the spot for home team"""
+            insert_into_schedule(con,team_id,week,away_team_name,cur_write)
+            """Update the spot for away team"""
+            insert_into_schedule(con, away_team_id,week,team_name,cur_write)
+            # print(team_name)
+        week+=1
 
 
 
@@ -272,13 +331,15 @@ def generate_initial_schedule_value(cursor):
         # print(i)
         cur.execute("insert into schedule (teamid) values(?)",(i,))
 
-def insert_into_schedule(con, home_id, rand_num, other_team):
+def insert_into_schedule(con, home_id, week_num, other_team,cursor_write):
     cur = con.cursor()
-    week_str = "week_" + str(rand_num)
-    print(week_str)
-    print(other_team)
+    week_str = "week_" + str(week_num)
+    # print(week_str)
+    # print(other_team)
     command_line = f'update schedule set {week_str} = ? where teamid = ?'
-    cur.execute(command_line,(other_team, home_id))
+    cursor_write.execute(command_line,(other_team, home_id))
+    # con.commit()
+
 
 
 
